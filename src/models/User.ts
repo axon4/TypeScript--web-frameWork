@@ -2,6 +2,7 @@ import Model from './Model';
 import Attributes from './Attributes';
 import EventHandler from './EventHandler';
 import Syncher from './Syncher';
+import Collection from './Collection';
 
 export interface UserData {
 	id?: number;
@@ -18,6 +19,10 @@ class User extends Model<UserData> {
 			new EventHandler(),
 			new Syncher<UserData>(rootURL)
 		);
+	};
+
+	static generateCollection(): Collection<User, UserData> {
+		return new Collection<User, UserData>(rootURL, (json: UserData) => User.generate(json));
 	};
 };
 

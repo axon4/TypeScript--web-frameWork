@@ -27,22 +27,16 @@ class Model<T extends HasID> {
 		private sync: Sync<T>
 	) {};
 
-	get get() {
-		return this.attributes.get;
-	};
+	get = this.attributes.get;
 
 	set(userDatum: T): void {
 		this.attributes.set(userDatum);
 		this.events.trigger('change');
 	};
 
-	get on() {
-		return this.events.on;
-	};
+	on = this.events.on;
 
-	get trigger() {
-		return this.events.trigger;
-	};
+	trigger = this.events.trigger;
 
 	fetch(): void {
 		const id = this.get('id');

@@ -1,6 +1,8 @@
-import User from './models/User';
+import Collection from './models/Collection';
+import User, { UserData } from './models/User';
 
-const user = User.generate({id: 1});
+const collection = User.generateCollection();
 
-user.on('change', () => console.log('change'));
-user.fetch();
+collection.on('change', () => console.log(collection));
+
+collection.fetch();
