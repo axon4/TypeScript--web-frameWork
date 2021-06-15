@@ -4,7 +4,7 @@ interface HasID {
 	id?: number;
 };
 
-class Sync<T extends HasID> {
+class Syncher<T extends HasID> {
 	constructor(public rootURL: string) {};
 
 	fetch(id: number): AxiosPromise {
@@ -22,4 +22,4 @@ class Sync<T extends HasID> {
 	};
 };
 
-export default Sync;
+export default Syncher;

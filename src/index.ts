@@ -1,9 +1,6 @@
 import User from './models/User';
 
-const user = new User({
-	id: 1,
-	name: 'Parvejo'
-});
+const user = User.generate({id: 1});
 
-user.on('save', () => console.log(user));
-user.save();
+user.on('change', () => console.log('change'));
+user.fetch();
