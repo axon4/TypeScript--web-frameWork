@@ -1,43 +1,63 @@
-import axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import Attributes from './Attributes';
+import EventHandler from './EventHandler';
+import Sync from './Sync';
 
-interface UserData {
+export interface UserData {
 	id?: number;
 	name?: string;
 	age?: number;
 };
 
-type CallBack = () => void;
+const rootURL = 'http://localhost:3000/users';
 
 class User {
-	constructor(private data: UserData) {};
+	constructor(attrs: UserData) {
+		this.attributes = new Attributes<UserData>(attrs);
+	};
 
-	events: {[key: string]: CallBack[]} = {};
+	attributes: Attributes<UserData>;
 
-	get(userDatum: string): (number | string) {
-		return this.data[userDatum];
+	events: EventHandler = new EventHandler();
+
+	sync: Sync<UserData> = new Sync<UserData>(rootURL);
+
+	get get() {
+		return this.attributes.get;
 	};
 
 	set(userDatum: UserData): void {
-		Object.assign(this.data, userDatum);
+		this.attributes.set(userDatum);
+		this.events.trigger('change');
 	};
 
-	on(event: string, callback: CallBack): void {
-		const handlers = this.events[event] || [];
-		handlers.push(callback);
-		this.events[event] = handlers;
+	get on() {
+		return this.events.on;
 	};
 
-	trigger(event: string): void {
-		// debugger;
-		const handlers = this.events[event];
+	get trigger() {
+		return this.events.trigger;
+	};
 
-		if (!handlers || handlers.length === 0) {
-			return;
+	fetch(): void {
+		const id = this.get('id');
+
+		if (typeof id !== 'number') {
+			throw new Error('USER DOES NOT EXIST!');
 		};
 
-		handlers.forEach(callback => {
-			callback();
-		});
+		this.sync.fetch(id)
+			.then((response: AxiosResponse): void => {
+				this.set(response.data);
+			});
+	};
+
+	save(): void {
+		this.sync.save(this.attributes.getAll())
+			.then((response: AxiosResponse): void => {
+				this.trigger('save');
+			})
+			.catch(() => this.trigger('error'));
 	};
 };
 
