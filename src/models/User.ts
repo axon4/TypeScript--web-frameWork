@@ -24,6 +24,12 @@ class User extends Model<UserData> {
 	static generateCollection(): Collection<User, UserData> {
 		return new Collection<User, UserData>(rootURL, (json: UserData) => User.generate(json));
 	};
+
+	setRandomAge(): void {
+		const age = Math.round(Math.random() * 100);
+
+		this.set({ age });
+	};
 };
 
 export default User;

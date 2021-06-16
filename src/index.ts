@@ -1,8 +1,8 @@
-import Collection from './models/Collection';
-import User, { UserData } from './models/User';
+import User from './models/User';
+import UserForm from './views/UserForm';
 
-const collection = User.generateCollection();
+const user = User.generate({name: 'Sonny', age: 25});
 
-collection.on('change', () => console.log(collection));
+const userForm = new UserForm(document.getElementById('root'), user);
 
-collection.fetch();
+userForm.render();
