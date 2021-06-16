@@ -6,25 +6,25 @@ interface ModelAttributes<T> {
 	set(data: T): void;
 };
 
-interface Sync<T> {
-	fetch(id: number): AxiosPromise;
+interface Synchronise<T> {
+	fetch(ID: number): AxiosPromise;
 	save(data: T): AxiosPromise;
 };
 
 interface Events {
-	on(event: string, callback: () => void): void;
+	on(event: string, callBack: () => void): void;
 	trigger(event: string): void;
 };
 
 interface HasID {
-	id?: number;
+	ID?: number;
 };
 
 class Model<T extends HasID> {
 	constructor(
 		private attributes: ModelAttributes<T>,
 		private events: Events,
-		private sync: Sync<T>
+		private synchronise: Synchronise<T>
 	) {};
 
 	get = this.attributes.get;
@@ -39,24 +39,24 @@ class Model<T extends HasID> {
 	trigger = this.events.trigger;
 
 	fetch(): void {
-		const id = this.get('id');
+		const ID = this.get('ID');
 
-		if (typeof id !== 'number') {
-			throw new Error('USER DOES NOT EXIST!');
+		if (typeof ID !== 'number') {
+			throw new Error('USER DOES NOT EXIST');
 		};
 
-		this.sync.fetch(id)
+		this.synchronise.fetch(ID)
 			.then((response: AxiosResponse): void => {
 				this.set(response.data);
 			});
 	};
 
 	save(): void {
-		this.sync.save(this.attributes.getAll())
+		this.synchronise.save(this.attributes.getAll())
 			.then((response: AxiosResponse): void => {
 				this.trigger('save');
 			})
-			.catch(() => this.trigger('error'));
+			.catch(() => {this.trigger('error')});
 	};
 };
 

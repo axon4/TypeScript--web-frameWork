@@ -11,10 +11,10 @@ class UserForm extends View<User, UserData> {
 	};
 
 	onChangeNameClick = (): void => {
-		const input = this.parent.querySelector('input');
+		const inPut = this.parent.querySelector('input');
 
-		if (input) {
-			const name = input.value;
+		if (inPut) {
+			const name = inPut.value;
 
 			this.model.set({ name });
 		};
@@ -28,7 +28,7 @@ class UserForm extends View<User, UserData> {
 		this.model.save();
 	};
 
-	template(): string {
+	temPlate(): string {
 		return `
 			<div>
 				<input placeholder='${this.model.get('name')}' />

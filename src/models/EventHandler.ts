@@ -3,23 +3,22 @@ type CallBack = () => void;
 class EventHandler {
 	events: {[key: string]: CallBack[]} = {};
 
-	on = (event: string, callback: CallBack): void => {
+	on = (event: string, callBack: CallBack): void => {
 		const handlers = this.events[event] || [];
-		handlers.push(callback);
+
+		handlers.push(callBack);
+
 		this.events[event] = handlers;
 	};
 
 	trigger = (event: string): void => {
 		// debugger;
+
 		const handlers = this.events[event];
 
-		if (!handlers || handlers.length === 0) {
-			return;
-		};
+		if (!handlers || handlers.length === 0) return;
 
-		handlers.forEach(callback => {
-			callback();
-		});
+		handlers.forEach(callBack => {callBack()});
 	};
 };
 

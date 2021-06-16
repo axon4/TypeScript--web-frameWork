@@ -11,7 +11,7 @@ class UserEdit extends View<User, UserData> {
 		};
 	};
 
-	template(): string {
+	temPlate(): string {
 		return `
 			<div>
 				<div class='user-show'></div>

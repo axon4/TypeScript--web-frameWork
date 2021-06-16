@@ -1,11 +1,11 @@
+import axios, { AxiosResponse } from 'axios';
 import User, { UserData } from './User';
 import EventHandler from './EventHandler';
-import axios, { AxiosResponse } from 'axios';
 
 class Collection<T, K> {
 	constructor(
 		public rootURL: string,
-		public deserialise: (json: K) => T
+		public deSerialise: (JSON: K) => T
 	) {};
 
 	models: T[] = [];
@@ -23,7 +23,7 @@ class Collection<T, K> {
 		axios.get(this.rootURL)
 			.then((response: AxiosResponse) => {
 				response.data.forEach((value: K) => {
-					this.models.push(this.deserialise(value));
+					this.models.push(this.deSerialise(value));
 				});
 
 				this.trigger('change');

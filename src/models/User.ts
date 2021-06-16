@@ -1,11 +1,11 @@
 import Model from './Model';
 import Attributes from './Attributes';
 import EventHandler from './EventHandler';
-import Syncher from './Syncher';
+import Synchroniser from './Synchroniser';
 import Collection from './Collection';
 
 export interface UserData {
-	id?: number;
+	ID?: number;
 	name?: string;
 	age?: number;
 };
@@ -13,16 +13,16 @@ export interface UserData {
 const rootURL = 'http://localhost:3000/users';
 
 class User extends Model<UserData> {
-	static generate(attrs: UserData): User {
+	static generate(attributes: UserData): User {
 		return new User(
-			new Attributes<UserData>(attrs),
+			new Attributes<UserData>(attributes),
 			new EventHandler(),
-			new Syncher<UserData>(rootURL)
+			new Synchroniser<UserData>(rootURL)
 		);
 	};
 
 	static generateCollection(): Collection<User, UserData> {
-		return new Collection<User, UserData>(rootURL, (json: UserData) => User.generate(json));
+		return new Collection<User, UserData>(rootURL, (JSON: UserData) => User.generate(JSON));
 	};
 
 	setRandomAge(): void {
