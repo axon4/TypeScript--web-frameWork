@@ -1,18 +1,12 @@
-import User from '../models/User';
+import View from './View';
+import User, { UserData } from '../models/User';
 
-class UserForm {
-	constructor(public parent: Element, public model: User) {
-		this.bindModel();
-	};
-
-	bindModel(): void {
-		this.model.on('change', () => this.render());
-	};
-
+class UserForm extends View<User, UserData> {
 	eventsMap(): {[key: string]: () => void} {
 		return {
 			'click:.change-name': this.onChangeNameClick,
-			'click:.random-age': this.onRandomAgeClick
+			'click:.random-age': this.onRandomAgeClick,
+			'click:.save': this.onSaveClick
 		};
 	};
 
@@ -30,38 +24,19 @@ class UserForm {
 		this.model.setRandomAge();
 	};
 
+	onSaveClick = (): void => {
+		this.model.save();
+	};
+
 	template(): string {
 		return `
 			<div>
-				<h1>User Form</h1>
-					<p>User Name: ${this.model.get('name')}</p>
-					<p>User Age: ${this.model.get('age')}</p>
-					<input />
-					<button class='change-name'>Change Name</button>
-					<button class='random-age'>Random Age</button>
+				<input placeholder='${this.model.get('name')}' />
+				<button class='change-name'>Change Name</button>
+				<button class='random-age'>Random Age</button>
+				<button class='save'>Save</button>
 			</div>
 		`;
-	};
-
-	bindEvents(fragment: DocumentFragment): void {
-		const eventsMap = this.eventsMap();
-
-		for (let eventKey in eventsMap) {
-			const [ eventName, selector ] = eventKey.split(':');
-
-			fragment.querySelectorAll(selector).forEach(element => {
-				element.addEventListener(eventName, eventsMap[eventKey]);
-			});
-		};
-	};
-
-	render(): void {
-		this.parent.innerHTML = '';
-
-		const templateElement = document.createElement('template');
-		templateElement.innerHTML = this.template();
-		this.bindEvents(templateElement.content);
-		this.parent.append(templateElement.content);
 	};
 };
 
